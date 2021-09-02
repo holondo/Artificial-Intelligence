@@ -33,5 +33,12 @@ gerou(X,Y) :- mae(Y,X) ; pai(Y,X).
 filho(Child, Parent) :- macho(Child), gerou(Parent, Child).
 filha(Child, Parent) :- femea(Child), gerou(Parent, Child).
 
-tio(Uncle, Nephew) :- macho(Uncle), !, gerou(Grand, Uncle), gerou(Parent, Nephew), gerou(Grand, Parent), not(Uncle == Parent) . 
-tia(Aunt, Nephew) :- femea(Aunt), !, gerou(Grand, Aunt), gerou(Parent, Nephew), gerou(Grand, Parent), not(Aunt == Parent). 
+grandPa(Grandpa, Grandson) :- gerou(Parent, Grandson), gerou(Grandpa, Parent),macho(Grandpa), !.
+grandMa(Grandma, Grandson) :- gerou(Parent, Grandson), gerou(Grandma, Parent), femea(Grandma), !.
+
+%tio(Uncle, Nephew) :- grandPa(Grand, Nephew); grandMa(Grand, Nephew), filho(Uncle, Grand), gerou(Parent, Nephew), not(Parent == Uncle).
+tio(Uncle, Nephew) :- gerou(Parent, Nephew), gerou(Grand, Parent), filho(Uncle, Grand), not(pai(Nephew, Uncle)).
+tia(Aunt, Nephew) :- gerou(Parent, Nephew), gerou(Grand, Parent), filha(Aunt, Grand), not(mae(Nephew, Aunt)).
+
+primo(Cousin, Person):- (tio(Unclx, Person); tia(Unclx, Person)), filho(Cousin,Unclx).
+primo(Cousin, Person):- (tio(Unclx, Person); tia(Unclx, Person)), filho(Cousin,Unclx).
